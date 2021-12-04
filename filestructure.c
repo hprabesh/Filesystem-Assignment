@@ -399,4 +399,73 @@ void get(char *fileName, char *newFileName)
     {
         printf("get error: File not found.");
     }
+    return;
+}
+
+void del(char *fileName)
+{
+    // deleting the file is a bit tricky
+    // we need to first free the content inside the diectory entry
+    // then we need to free the inode it uses
+    _Inode *ptr = checkIfFileExist(fileName);
+    if (ptr->attrib & 0x1)
+    {
+        printf("del: That file is marked read-only.");
+        return;
+    }
+    if (ptr != NULL)
+    {
+        // also we need to free the block
+        int i;
+        // first updating the directory entry
+        for (i = 0; i < NUM_FILES; i++)
+        {
+            if (directory_ptr[i].valid == 1 &&
+                strcmp(directory_ptr[i].name, fileName) == 0)
+            {
+                directory_ptr[i].valid = 0;
+                free(directory_ptr[i].name);
+            }
+        }
+        // next clearing the inode valid entry and blocks
+        ptr->valid = 0;
+        memset(ptr->blocks,
+               -1,
+               MAX_BLOCKS_PER_FILE * sizeof(ptr->blocks[0]));
+    }
+    else
+    {
+        printf("del error: File not found.");
+    }
+    return;
+}
+
+void createFs(char *fileName)
+{
+    FILE *fp = fopen(fileName, "w+");
+    if (fp == NULL)
+    {
+        printf("createFs: Error creating file system.");
+        return;
+    }
+    fclose(fp);
+}
+
+FILE *openedFileSystem; // this stores the opened file system
+
+void openFs(char *fileName)
+{
+    openedFileSystem = fopen(fileName, "r+");
+    if (openedFileSystem == NULL)
+    {
+        printf("openFs: Error opening file system / File not found.");
+        return;
+    }
+    return;
+}
+
+void saveFs()
+{
+
+    fclose(openedFileSystem);
 }

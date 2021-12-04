@@ -145,7 +145,7 @@ int main()
             }
             else if (strcmp(token[0], "get") == 0)
             {
-                printf("Token count %d\n", token_count);
+
                 if (token_count == 4)
                 {
                     get(token[1], token[2]);
@@ -157,6 +157,28 @@ int main()
                 else
                 {
                     printf("Invalid syntax for get\n");
+                }
+            }
+            else if (strcmp(token[0], "del") == 0)
+            {
+                if (token_count == 3)
+                {
+                    del(token[1]);
+                }
+                else
+                {
+                    printf("Invalid syntax for del\n");
+                }
+            }
+            else if (strcmp(token[0], "createfs") == 0)
+            {
+                if (token_count == 3)
+                {
+                    createFs(token[1]);
+                }
+                else
+                {
+                    printf("createfs: File not found.\n");
                 }
             }
         }

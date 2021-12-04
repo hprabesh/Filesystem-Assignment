@@ -58,3 +58,11 @@ _Inode *checkIfFileExist(char *fileName);
 void attrib(int position, int booleanVal, char *fileName);
 
 void get(char *fileName, char *newFileName);
+
+void del(char *fileName);
+
+void createFs(char *fileName);
+
+void openFs(char *fileName);
+
+void saveFs();
