@@ -377,10 +377,10 @@ void get(char *fileName, char *newFileName)
     _Inode *ptr = checkIfFileExist(fileName);
     if (ptr != NULL)
     {
-        int i = 0;
-        FILE *fp = fopen(newFileName, "a");
+        int i;
+        FILE *fp = fopen(newFileName, "w+");
 
-        for (i; i < MAX_BLOCKS_PER_FILE; i++)
+        for (i = 0; i < MAX_BLOCKS_PER_FILE; i++)
         {
             uint32_t block = ptr->blocks[i];
             if (block != -1)

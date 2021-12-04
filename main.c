@@ -143,6 +143,22 @@ int main()
                     printf("Invalid syntax for attrib\n");
                 }
             }
+            else if (strcmp(token[0], "get") == 0)
+            {
+                printf("Token count %d\n", token_count);
+                if (token_count == 4)
+                {
+                    get(token[1], token[2]);
+                }
+                else if (token_count == 3)
+                {
+                    get(token[1], token[1]);
+                }
+                else
+                {
+                    printf("Invalid syntax for get\n");
+                }
+            }
         }
 
         free(working_root);
