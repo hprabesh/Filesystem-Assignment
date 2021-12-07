@@ -93,7 +93,14 @@ int main()
             }
             else if (strcmp(token[0], "put") == 0) // implementing the put functionality
             {
-                put(token[1]);
+                if (strlen(token[1]) > 32)
+                {
+                    printf("File name too long\n");
+                }
+                else
+                {
+                    put(token[1]);
+                }
             }
             else if (strcmp(token[0], "list") == 0) // implementing the list functionality
             {
@@ -175,6 +182,21 @@ int main()
                 if (token_count == 3)
                 {
                     createFs(token[1]);
+                }
+                else
+                {
+                    printf("createfs: File not found.\n");
+                }
+            }
+            else if (strcmp(token[0], "savefs") == 0)
+            {
+                saveFs();
+            }
+            else if (strcmp(token[0], "open") == 0)
+            {
+                if (token_count == 3)
+                {
+                    openFs(token[1]);
                 }
                 else
                 {
