@@ -9,6 +9,8 @@ _DirectoryEntry *directory_ptr;
 
 _Inode *inode_array_ptr[NUM_INODES];
 
+FILE *openedFileSystem = NULL; // this stores the opened file system
+
 unsigned char data_blocks[NUM_BLOCKS][BLOCK_SIZE];
 int used_blocks[NUM_BLOCKS];
 
@@ -449,9 +451,8 @@ void createFs(char *fileName)
         return;
     }
     fclose(fp);
+    return;
 }
-
-FILE *openedFileSystem; // this stores the opened file system
 
 void openFs(char *fileName)
 {
@@ -461,11 +462,52 @@ void openFs(char *fileName)
         printf("openFs: Error opening file system / File not found.");
         return;
     }
+    // reinitialize everything
+    // init();
+    // int directoryIndex = findFreeDirectoryEntry();
+    // fscanf(openedFileSystem, "%s %d %d", &directory_ptr[directoryIndex].name,
+    //        &directory_ptr[directoryIndex].inode, &directory_ptr[directoryIndex].valid);
+
     return;
 }
 
 void saveFs()
 {
+    // we use depth first method to save the file system
+    // first we save the superblock
+    int i;
+
+    if (openedFileSystem == NULL)
+    {
+        printf("saveFs: No other file system opened. So defaulted to untitled.db");
+        openedFileSystem = fopen("untitled.db", "a+");
+    }
+
+    for (i = 0; i < NUM_FILES; i++)
+    {
+        if (directory_ptr[i].valid == 1)
+        {
+            // we first write a directory entry to the file
+            fprintf(openedFileSystem, "%s %d %d", directory_ptr[i].name, directory_ptr[i].inode, directory_ptr[i].valid);
+            // then we write the inode to the file
+            fprintf(openedFileSystem, "\n%d %u %u %ld",
+                    inode_array_ptr[directory_ptr[i].inode]->valid,
+                    inode_array_ptr[directory_ptr[i].inode]->size,
+                    inode_array_ptr[directory_ptr[i].inode]->attrib,
+                    inode_array_ptr[directory_ptr[i].inode]->date);
+            // then we write the data blocks to the file
+            int j;
+            for (j = 0; j < MAX_BLOCKS_PER_FILE; j++)
+            {
+                uint32_t block = inode_array_ptr[directory_ptr[i].inode]->blocks[j];
+                if (block != -1)
+                {
+                    fprintf(openedFileSystem, "\n%s", data_blocks[block]);
+                }
+            }
+            fprintf(openedFileSystem, "\n**new_line**\n");
+        }
+    }
 
     fclose(openedFileSystem);
 }

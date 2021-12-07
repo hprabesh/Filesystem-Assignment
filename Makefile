@@ -22,5 +22,5 @@ filestructure.o: filestructure.c *.h
 	@echo "Compiled filestructure.h"
 
 clean:
-	rm -f *.o *.gch ~* a.out main
+	rm -f *.o *.gch ~* a.out main *.db
 
